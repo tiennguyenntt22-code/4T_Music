@@ -29,10 +29,13 @@ tính cá nhân hóa cao và cho phép tải nhạc ngoại tuyến .
 - Cải thiện chất lượng nhạc ...
 
 ## Yêu cầu nghiệp vụ (BR): 
-- BR-1: User cần tìm kiếm, nghe bài hát
-- BR-2: User cần tạo và quản lý Playlist.
-- BR-3: User tạo tài khoảng/đăng nhập để lưu lại lịch sử hoạt động (playlist, favor songs...)
-- BR-4: Admin cần quản lí nội dung nhạc 
+BR-01 — Khám phá: Người dùng cần tìm kiếm và khám phá các bài hát hiện có trên hệ thống.
+BR-02 — Phát nhạc: Người dùng cần phát nhạc và điều khiển quá trình phát nhạc.
+BR-03 — Quản lý playlist: Người dùng cần tạo và quản lý các playlist cá nhân.
+BR-04 — Quản lý tài khoản: Người dùng cần có tài khoản để lưu trữ thông tin cá nhân và tùy chọn sử dụng qua các phiên đăng nhập.
+BR-05 — Quản lý danh sách yêu thích: Người dùng cần lưu các bài hát và nghệ sĩ yêu thích.
+BR-06 — Hẹn giờ phát nhạc: Người dùng cần thiết lập thời gian để hệ thống tự động dừng phát nhạc.
+BR-07 — Quản trị nội dung: Quản trị viên cần quản lý nội dung âm nhạc theo quyền hạn được cấp.
 
 ## Tiêu chí: 
 - User có thể hoàn thành các thao tác chính.
