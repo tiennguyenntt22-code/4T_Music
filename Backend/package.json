@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node server.js"
+    "dev": "nodemon Src/server.js",
+    "start": "node Src/server.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/tiennguyenntt22-code/4T_Music/issues"
   },
-  "homepage": "https://github.com/tiennguyenntt22-code/4T_Music#readme"
+  "homepage": "https://github.com/tiennguyenntt22-code/4T_Music#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }

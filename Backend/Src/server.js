@@ -1,11 +1,13 @@
 import express from 'express';
+import taskRoute from './routes/songRouter.js';
 
 const app = express();
 
+app.use(express.json());
+
+app.use("/api/song", taskRoute);
+
 app.listen(5001, () => {
     console.log('server bắt đầu trên cổng 5001')
-})
-
-app.get("/api/song", (request, response) => {
-    response.send("Âm thầm bên em")
 });
+
