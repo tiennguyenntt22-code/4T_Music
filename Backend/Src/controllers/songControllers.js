@@ -3,7 +3,7 @@ export const getAllSong = (req, res) => {
 }
 
 export const postAllSong = (req, res) => {
-    res.status(200).json("Cập nhật bài hát mới thành công");
+    res.status(200).json("Thêm bài hát mới thành công");
 }
 
 export const updateSong = (req, res) => {
