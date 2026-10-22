@@ -1,0 +1,22 @@
+{
+  "name": "4t_music",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tiennguyenntt22-code/4T_Music.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tiennguyenntt22-code/4T_Music/issues"
+  },
+  "homepage": "https://github.com/tiennguyenntt22-code/4T_Music#readme"
+}
