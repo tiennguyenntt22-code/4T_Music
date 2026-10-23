@@ -121,3 +121,108 @@ Tiêu đề: API-03, API-04: đăng ký và đăng nhập
 - **Schema dùng chung (`4TMusic_Database.sql`):** mỗi lần sửa làm trên nhánh `db/...` nhỏ, merge ngay rồi báo người kia `git pull`. Không để thay đổi schema nằm lâu trong nhánh tính năng.
 - **File xlsx:** là file nhị phân, Git không gộp được. Chỉ một người cập nhật cột Trạng thái, hoặc cập nhật qua PR riêng rồi merge ngay.
 - **Code dùng chung** (kết nối DB, middleware, định dạng lỗi): do Người A sở hữu. Nếu B cần sửa thì báo A hoặc làm trong PR riêng, tránh hai người cùng sửa một file.
+
+## 9. Quy trình từng bước cho một người: từ pull code đến merge vào main
+
+Áp dụng cho mỗi nhóm API. Các lệnh chạy ở thư mục gốc dự án (thư mục chứa `Backend/`, `Docs/`, `Frontend/`).
+
+### Bước 0: Chuẩn bị máy (làm một lần)
+
+1. Clone repo: `git clone https://github.com/tiennguyenntt22-code/4T_Music.git`, rồi `cd 4T_Music`.
+2. Cài dependencies: `cd Backend`, chạy `npm install`.
+3. Tạo file `Backend/.env` (file này không được commit, đã nằm trong `.gitignore`):
+   ```
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASS=<mật khẩu MySQL của bạn>
+   DB_NAME=the4tmusic
+   ```
+4. Tạo DB: chạy file `Docs/4TMusic_Database.sql` trong MySQL (tạo DB `the4tmusic` và các bảng).
+5. Chạy thử: `npm run dev`, thấy log "server bắt đầu trên cổng 5001" là đạt.
+
+### Bước 1: Lấy code mới nhất từ main
+
+```bash
+git switch main
+git pull
+```
+
+Nếu `package.json` có thay đổi, chạy lại `npm install` trong `Backend/`.
+
+### Bước 2: Tạo nhánh cho nhiệm vụ
+
+```bash
+git switch -c feature/<nhóm-API>      # ví dụ: feature/auth
+```
+
+Mỗi nhiệm vụ một nhánh, tạo từ `main`. Không làm việc trực tiếp trên `main`.
+
+### Bước 3: Làm nhiệm vụ
+
+1. Viết code theo đúng cấu trúc: `Backend/Src/routes`, `Backend/Src/controllers`, dùng chung `Backend/Src/common/connect.js` để truy cập DB.
+2. Dùng `import`/`export` (dự án có `"type": "module"`), không dùng `require`/`module.exports`.
+3. Cài thêm package nếu cần: `npm install <tên-package>` (trong `Backend/`), và nhớ commit cả `package.json` lẫn `package-lock.json`.
+4. Chạy thử bằng `npm run dev` và Postman trước khi commit.
+
+### Bước 4: Commit
+
+```bash
+git status                  # kiểm tra: không có .env, không có node_modules
+git add <các file đã sửa>   # hạn chế dùng "git add ." khi chưa xem git status
+git commit -m "API-03: đăng ký tài khoản"
+```
+
+Commit nhỏ, thường xuyên. Message ghi mã API.
+
+### Bước 5: Cập nhật nhánh theo main rồi push
+
+```bash
+git pull origin main        # lấy thay đổi mới của main; có xung đột thì sửa, git add, git commit
+git push -u origin feature/<nhóm-API>     # lần đầu; các lần sau chỉ cần git push
+```
+
+### Bước 6: Mở Pull Request
+
+1. Mở link GitHub in ra sau khi push, hoặc vào tab Pull requests, bấm New pull request.
+2. Base chọn `main`, compare chọn nhánh của bạn.
+3. Điền theo mẫu ở mục 7. Trong mục "Cần người kia chú ý" ghi rõ nếu có package mới, biến `.env` mới hoặc đổi schema.
+4. Xem tab Files changed lần cuối: không có `.env`, mật khẩu hay `node_modules`.
+5. Báo người kia vào review.
+
+### Bước 7: Review (người kia làm)
+
+1. `git fetch`, `git switch <nhánh>`, `npm install`, `npm run dev` để chạy thử.
+2. Đọc code ở tab Files changed, góp ý nếu cần.
+3. Bấm Review changes, chọn Approve rồi Submit review. Không để PR tồn qua đêm.
+4. Nếu có góp ý: tác giả sửa trên cùng nhánh, commit, `git push`. PR tự cập nhật, sau đó báo review lại.
+
+### Bước 8: Merge vào main
+
+Điều kiện: có 1 approval và không có xung đột.
+
+1. Trên PR, bấm Merge pull request, rồi Confirm merge.
+2. Bấm Delete branch (tự động nếu đã bật "Automatically delete head branches").
+
+### Bước 9: Dọn dẹp trên máy
+
+```bash
+git switch main
+git pull
+git branch -d feature/<nhóm-API>
+```
+
+Nếu dùng Squash and merge và git báo nhánh chưa merge, dùng `git branch -D feature/<nhóm-API>` (code đã nằm trong `main`).
+
+Sau đó báo người kia `git pull` (và `npm install` nếu có package mới). Quay lại Bước 1 cho nhiệm vụ tiếp theo.
+
+### Lỗi thường gặp
+
+| Hiện tượng | Nguyên nhân và cách xử lý |
+|---|---|
+| Chuyển sang `main` thì mất file của mình | File chỉ nằm trên nhánh feature, chưa merge. `git switch <nhánh-feature>` để xem lại. |
+| `fatal: pathspec '...' did not match any files` | Đang đứng trong thư mục con nên đường dẫn bị lệch. Về thư mục gốc dự án rồi chạy lại. |
+| `ERR_MODULE_NOT_FOUND` khi chạy server | Chưa `npm install`, hoặc thiếu package trong `package.json`. |
+| `require is not defined in ES module scope` | Đang dùng `require`/`module.exports` trong dự án ES module. Đổi sang `import`/`export`. |
+| `Access denied` hoặc `Unknown database` | `.env` sai mật khẩu hoặc chưa tạo DB `the4tmusic`. |
+| `.env` hiện trong `git status` | Không `git add` file đó. Kiểm tra `.gitignore` có dòng `.env`. |
+| Đã lỡ commit `.env` hoặc mật khẩu | Báo cả nhóm và đổi mật khẩu ngay, vì xóa file ở commit sau không xóa được lịch sử. |
