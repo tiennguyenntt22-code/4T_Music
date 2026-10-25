@@ -12,3 +12,6 @@ export const updateSong = (req, res) => {
 export const deleteSong = (req, res) => {
     res.status(200).json("bài hát đã được xóa");
 }
+export const postSong = (req , res) => {
+    res.status(200).json("Cập nhật 1 bài hát");
+}
