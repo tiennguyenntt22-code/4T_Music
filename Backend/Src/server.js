@@ -7,9 +7,9 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api/song", songRoute);
+app.use("/user", userRoute);
 
-app.use("/api/user", userRoute);
+app.use("/song", songRoute);
 
 app.listen(5001, () => {
   console.log("server bắt đầu trên cổng 5001");
