@@ -1,4 +1,4 @@
-import { findAll, create, xoa, findSongById, findSongBySongName, findSongByArtistId } from "../model/songModel.js";
+import { findAll, create, xoa, findSongById, findSongBySongName, findSongByArtistId, findSongByArtistName, findSongByAlbumId, findSongByAlbumName } from "../model/songModel.js";
 
 export const getAllSong = async (req, res) => {
     try {
@@ -51,6 +51,50 @@ export const getSongByArtistId = async (req, res) => {
         return res.status(500).json({ message: "Lỗi server" });
     }
 }
+
+export const getSongByArtistName = async (req, res) => {
+    try {
+        const songs = await findSongByArtistName(req.params.artist_name);
+        if (songs.length === 0) {
+            return res.status(404).json({ message: "Không tìm thấy bài hát nào" })
+        }
+        return res.status(200).json(songs);
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Lỗi hệ thống" })
+    }
+}
+
+export const getSongByAlbumId = async (req, res) => {
+    try {
+        const songs = await findSongByAlbumId(req.params.album_id);
+        if (songs.length === 0) {
+            return res.status(404).json({ message: "Không tìm thấy bài hát nào" })
+        }
+        return res.status(200).json(songs);
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Lỗi hệ thống" })
+    }
+}
+
+
+export const getSongByAlbumName = async (req, res) => {
+    try {
+        const songs = await findSongByAlbumId(req.params.album_name);
+        if (songs.length === 0) {
+            return res.status(404).json({ message: "Không tìm thấy bài hát nào" })
+        }
+        return res.status(200).json(songs);
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Lỗi hệ thống" })
+    }
+}
+
 
 export const postSong = async (req, res) => {
     try {
