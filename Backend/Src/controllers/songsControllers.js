@@ -5,6 +5,10 @@ import {
   findSongById,
   findSongBySongName,
   findSongByArtistId,
+  findSongByAlbumId,
+  findSongByArtistName,
+  findSongByAlbumName,
+  findSongByPlaylist,
 } from "../model/songsModel.js";
 
 export const getAllSong = async (req, res) => {
@@ -56,6 +60,65 @@ export const getSongByArtistId = async (req, res) => {
   }
 };
 
+
+export const getSongByArtistName = async (req, res) => {
+  try {
+    const songs = await findSongByArtistName(req.params.artist_name);
+    if (songs.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy bài hát nào" })
+    }
+    return res.status(200).json(songs);
+  }
+  catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Lỗi hệ thống" })
+  }
+}
+
+export const getSongByAlbumId = async (req, res) => {
+  try {
+    const songs = await findSongByAlbumId(req.params.album_id);
+    if (songs.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy bài hát nào" })
+    }
+    return res.status(200).json(songs);
+  }
+  catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Lỗi hệ thống" })
+  }
+}
+
+
+export const getSongByAlbumName = async (req, res) => {
+  try {
+    const songs = await findSongByAlbumName(req.params.album_name);
+    if (songs.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy bài hát nào" })
+    }
+    return res.status(200).json(songs);
+  }
+  catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Lỗi hệ thống" })
+  }
+}
+
+export const getSongByPlaylist = async (req, res) => {
+  try {
+    const songs = await findSongByPlaylist(req.params.playlist_id);
+    if (songs.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy bài hát nào" })
+    }
+    return res.status(200).json(songs);
+  }
+  catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Lỗi hệ thống" })
+  }
+}
+
+
 export const postSong = async (req, res) => {
   try {
     const { song_name, duration } = req.body;
@@ -68,10 +131,6 @@ export const postSong = async (req, res) => {
     console.error(error);
     return res.status(500).json({ message: "Lỗi server" });
   }
-};
-
-export const updateSong = (req, res) => {
-  res.status(200).json("cập nhật bài hát mới thành công");
 };
 
 export const deleteSong = async (req, res) => {
