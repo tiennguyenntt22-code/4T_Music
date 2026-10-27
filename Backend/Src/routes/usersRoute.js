@@ -3,8 +3,8 @@ import {
   getAllUser,
   getUserByAccount,
   getUserByEmail,
-} from "../controllers/userControllers.js";
-import { getUserById } from "../controllers/userControllers.js";
+} from "../controllers/usersControllers.js";
+import { getUserById } from "../controllers/usersControllers.js";
 const router = express.Router();
 
 router.get("/", getAllUser);

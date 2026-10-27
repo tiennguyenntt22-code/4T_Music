@@ -3,7 +3,7 @@ import {
   findByAccount,
   findById,
   findByEmail,
-} from "../model/userModel.js";
+} from "../model/usersModel.js";
 
 export const getAllUser = async (req, res) => {
   try {
