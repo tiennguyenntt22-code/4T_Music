@@ -30,7 +30,7 @@ export const getSongById = async (req, res) => {
     return res.status(200).json(songs);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi hệ thống" });
+    return res.status(500).json({ message: "Lỗi server" });
   }
 };
 
@@ -71,7 +71,7 @@ export const getSongByArtistName = async (req, res) => {
   }
   catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi hệ thống" })
+    return res.status(500).json({ message: "Lỗi server" })
   }
 }
 
@@ -85,7 +85,7 @@ export const getSongByAlbumId = async (req, res) => {
   }
   catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi hệ thống" })
+    return res.status(500).json({ message: "Lỗi server" })
   }
 }
 
@@ -100,7 +100,7 @@ export const getSongByAlbumName = async (req, res) => {
   }
   catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi hệ thống" })
+    return res.status(500).json({ message: "Lỗi server" })
   }
 }
 
@@ -114,7 +114,7 @@ export const getSongByPlaylist = async (req, res) => {
   }
   catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi hệ thống" })
+    return res.status(500).json({ message: "Lỗi server" })
   }
 }
 
