@@ -5,17 +5,20 @@ import userRoute from "./routes/usersRoute.js";
 import artistsRoute from "./routes/artistsRoute.js";
 import playlistsRoute from "./routes/playlistsRoute.js";
 import folderRoute from "./routes/foldersRoute.js";
+import authRoute from "./routes/authRoute.js";
 const app = express();
 
 app.use(express.json());
 
-app.use("/users", userRoute, folderRoute);
+app.use("/api/users", userRoute, folderRoute);
 
-app.use("/songs", songRoute);
+app.use("/api/songs", songRoute);
 
-app.use("/artists", artistsRoute);
+app.use("/api/artists", artistsRoute);
 
-app.use("/playlists", playlistsRoute);
+app.use("/api/playlists", playlistsRoute);
+
+app.use("/api/auth", authRoute);
 
 app.listen(5001, () => {
   console.log("server bắt đầu trên cổng 5001");
