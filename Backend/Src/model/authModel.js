@@ -9,15 +9,19 @@ export const registerUser = async ({ user_name, user_account, user_password, use
     return result.insertId;
 };
 
-// ===== Login ===== 
+// ===== Login =================================================================
+
 const hashToken = (token) => crypto.createHash("sha256").update(token).digest("hex");
 // Băm refreshToken trước khi lưu vào DB.
+
+// ===== REFRESH TOKEN =====
 export const saveRefreshToken = async (user_id, token, expiresAt) => {
     await pool.query(`
         INSERT INTO RefreshToken (user_id, token_hash, expires_at) 
         VALUES (?, ?, ?);
         `, [user_id, token, expiresAt]);
-}
+}// Lưu refreshToken vào DB
+
 
 export const findRefreshToken = async (token) => {
     const [row] = await pool.query(`
@@ -25,15 +29,16 @@ export const findRefreshToken = async (token) => {
         WHERE token_hash = ? AND expires_at > NOW()
         `, [hashToken(token)]);
     return row[0];
-}
+}// Tìm refreshToken còn hạn trong DB
+
 
 export const deleteRefreshToken = async (token) => {
     await pool.query(`
         DELETE FROM RefreshToken 
         WHERE token_hash = ? 
         `, [hashToken(token)]);
-}
-// ===== Login =====
+}// Xóa 1 refreshToken
+// ======================================================================
 
 export const signOutUser = async ({ }) => {
     const [result] = await pool.query(`
