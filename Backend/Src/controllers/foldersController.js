@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 export const getFolder = async (req, res) => {
     try {
-        const { user_id } = req.params;
+        const { user_id } = req.user;
         const folder = await findFolder(user_id);
         if (!folder) {
             return res.status(404).json({ message: "Không tìm thấy người dùng" });
@@ -19,7 +19,7 @@ export const getFolder = async (req, res) => {
 export const patchFolder = async (req, res) => {
     try {
         const { user_name, user_language } = req.body;
-        const { user_id } = req.params;
+        const { user_id } = req.user;
         const folder = await updateFolder(user_name, user_language, user_id);
         if (folder === 0) {
             return res.status(404).json({ message: "Không tìm thấy người dùng" });
@@ -34,7 +34,7 @@ export const patchFolder = async (req, res) => {
 
 export const putFolderPassword = async (req, res) => {
     try {
-        const { user_id } = req.params;
+        const { user_id } = req.user;
         const { old_password, new_password } = req.body;
 
         if (!old_password || !new_password?.trim()) {
@@ -63,7 +63,7 @@ export const putFolderPassword = async (req, res) => {
 
 export const postFolderImage = async (req, res) => {
     try {
-        const { user_id } = req.params;
+        const { user_id } = req.user;
         const { avatar_url } = req.body;
         if (!avatar_url?.trim()) {
             return res.status(400).json({ message: "Thiếu URL" })

@@ -1,5 +1,5 @@
 import { registerUser, saveRefreshToken, deleteRefreshToken, findRefreshToken } from "../model/authModel.js";
-import { findByAccount, findByEmail } from "../model/usersModel.js";
+import { findAuthByAccount, findByEmail } from "../model/usersModel.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
@@ -50,7 +50,7 @@ export const postLogin = async (req, res) => {
             return res.status(400).json({ message: "Thiếu account hoặc password !" });
         }
 
-        const exist = await findByAccount(user_account); // Check account có tồn tại không
+        const exist = await findAuthByAccount(user_account); // Check account có tồn tại không
         if (!exist) {
             return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu!" });
         }
@@ -61,7 +61,6 @@ export const postLogin = async (req, res) => {
         } // dùng bcrypt so sánh mật khẩu đưa vào với mật khẩu đã được mã hóa
 
         const accessToken = createAccessToken(exist.user_id);
-
         const refreshToken = crypto.randomBytes(64).toString("hex");
         const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL);
 

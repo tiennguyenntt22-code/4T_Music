@@ -24,7 +24,7 @@ export const getAllPlaylist = async (req, res) => {
 
 export const getAllPlaylistByUser = async (req, res) => {
     try {
-        const playlists = await findAllPlaylistByUser(req.params.user_id);
+        const playlists = await findAllPlaylistByUser(req.user.user_id);
         return res.status(200).json(playlists);
     }
     catch (error) {
@@ -35,14 +35,15 @@ export const getAllPlaylistByUser = async (req, res) => {
 
 export const postPlaylist = async (req, res) => {
     try {
-        const { playlist_description, playlist_name, user_id } = req.body;
+        const { playlist_description, playlist_name } = req.body;
+        const { user_id } = req.user;
         if (!playlist_name?.trim()) {
             return res.status(400).json({ message: "Thiếu tên playlist" });
         }
         if (!user_id) {
             return res.status(400).json({ message: "Thiếu user_id" });
         }
-        const playlists = await createPlaylist(playlist_name.trim(), playlist_description || null, user_id);
+        const playlists = await createPlaylist(playlist_name.trim(), playlist_description || null,user_id);
         return res.status(200).json({ message: "Tạo thành công playlist", playlists })
     }
     catch (error) {
@@ -111,7 +112,7 @@ export const postSongToPlaylist = async (req, res) => {
         if (!req.body.song_id) {
             return res.status(400).json({ message: "Thiếu song id" })
         }
-        const affected = await addSongToPlaylist(req.params.playlist_id, req.body.song_id);
+        await addSongToPlaylist(req.params.playlist_id, req.body.song_id);
         return res.status(201).json({ message: "Thêm bài hát thành công playlist" })
     }
     catch (error) {

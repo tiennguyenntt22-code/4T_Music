@@ -5,11 +5,12 @@ import {
     putFolderPassword,
     postFolderImage
 } from "../controllers/foldersController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
-router.get("/:user_id", getFolder);
-router.patch("/:user_id", patchFolder);
-router.put("/:user_id/password", putFolderPassword);
-router.post("/:user_id/avatar", postFolderImage);
+router.get("/me",verifyToken, getFolder);
+router.patch("/me",verifyToken, patchFolder);
+router.put("/me/password",verifyToken, putFolderPassword);
+router.post("/me/avatar",verifyToken, postFolderImage);
 
 export default router;

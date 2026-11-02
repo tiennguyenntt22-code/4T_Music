@@ -3,6 +3,7 @@ import {
   findByAccount,
   findById,
   findByEmail,
+  findByUsername
 } from "../model/usersModel.js";
 
 export const getAllUser = async (req, res) => {
@@ -42,9 +43,23 @@ export const getUserByEmail = async (req, res) => {
     const users = await findByEmail(req.params.user_email);
     if (!users)
       return res.status(404).json({ message: "Không tìm thấy email" });
-    res.status(200).json(users);
+    return res.status(200).json(users);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+export const getUserByName = async (req, res) => {
+  try {
+    const { user_name } = req.params;
+    const users = await findByUsername(user_name);
+    if (users.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy tên người dùng" });
+    }
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Lỗi server" })
+  }
+}
