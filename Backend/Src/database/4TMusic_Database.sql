@@ -27,9 +27,9 @@ created_at timestamp default current_timestamp
 create table Artist (
 artist_id int auto_increment primary key, 
 artist_name varchar(150) not null unique,
-artist_birth date default '2001/01/01',
-follower int default 0
+artist_birth date default '2001/01/01'
 );
+-- Số người theo dõi: đếm từ bảng ArtistFollow (COUNT(*)), không lưu cột riêng.
 -- 3-------------------------------------------------------------------
 -- --------------              Bảng Playlist        -------------------
 -- --------------------------------------------------------------------
@@ -59,9 +59,8 @@ song_name varchar(100) not null default 'ECNHQ',
 song_id int auto_increment primary key, 
 release_date date not null default '2001/01/01',
 duration int not null default 0,
-likes int default 0,
 shares int default 0,
-comments int default 0,
+-- Lượt like / bình luận: đếm từ bảng SongLike và Comment (COUNT(*)), không lưu cột riêng.
 album_id int ,
 foreign key (album_id) references Album(album_id),
 artist_id int,
@@ -77,6 +76,63 @@ primary key (song_id , playlist_id),
 foreign key (playlist_id) references Playlist(playlist_id) on delete cascade,
 foreign key (song_id) references Song(song_id) on delete cascade,
 created_at timestamp default current_timestamp );
+-- 7--------------------------------------------------------------------
+-- ---------------          Bảng RefreshToken            --------------
+-- ---------------------------------------------------------------------
+create table RefreshToken (
+token_id int auto_increment primary key,
+user_id int not null,
+token_hash char(64) not null unique,          -- sha256 của refreshToken (64 ký tự hex)
+expires_at datetime not null,
+created_at timestamp default current_timestamp,
+foreign key (user_id) references User(user_id) on delete cascade
+);
+-- 8--------------------------------------------------------------------
+-- ---------------          Bảng EmailToken              --------------
+-- ---------------------------------------------------------------------
+create table EmailToken (
+token_id int auto_increment primary key,
+user_id int not null,
+token_hash char(64) not null unique,          -- sha256 của token gửi qua email
+type enum('verify_email','reset_password') not null,
+expires_at datetime not null,
+created_at timestamp default current_timestamp,
+foreign key (user_id) references User(user_id) on delete cascade
+);
+-- 9--------------------------------------------------------------------
+-- ---------------    bảng relation user-song (Like)     --------------
+-- ---------------------------------------------------------------------
+create table SongLike (
+user_id int,
+song_id int,
+created_at timestamp default current_timestamp,
+primary key (user_id, song_id),               -- 1 người chỉ like 1 bài 1 lần
+foreign key (user_id) references User(user_id) on delete cascade,
+foreign key (song_id) references Song(song_id) on delete cascade
+);
+-- 10-------------------------------------------------------------------
+-- ---------------          Bảng Comment                 --------------
+-- ---------------------------------------------------------------------
+create table Comment (
+comment_id int auto_increment primary key,
+user_id int not null,
+song_id int not null,
+content text not null,
+created_at timestamp default current_timestamp,
+foreign key (user_id) references User(user_id) on delete cascade,
+foreign key (song_id) references Song(song_id) on delete cascade
+);
+-- 11-------------------------------------------------------------------
+-- ---------------  bảng relation user-artist (Follow)   --------------
+-- ---------------------------------------------------------------------
+create table ArtistFollow (
+user_id int,
+artist_id int,
+created_at timestamp default current_timestamp,
+primary key (user_id, artist_id),             -- 1 người chỉ follow 1 nghệ sĩ 1 lần
+foreign key (user_id) references User(user_id) on delete cascade,
+foreign key (artist_id) references Artist(artist_id) on delete cascade
+);
 
 
 -- Index_user

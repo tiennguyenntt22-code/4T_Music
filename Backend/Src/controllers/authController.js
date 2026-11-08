@@ -1,5 +1,5 @@
 import { registerUser, saveRefreshToken, deleteRefreshToken, findRefreshToken, deleteEmailTokenOfUser, saveEmailToken, findEmailToken, setEmailVerified, updatePassword } from "../model/authModel.js";
-import { findAuthByAccount, findByEmail } from "../model/usersModel.js";
+import { findAuthByAccount, findByEmail, findByAccount } from "../model/usersModel.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import crypto, { verify } from 'crypto';
