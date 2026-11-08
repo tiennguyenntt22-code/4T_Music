@@ -6,7 +6,7 @@ export const verifyToken = async (req, res, next) => {
         // Lấy accessToken từ header
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return resizeBy.status(401).json({ message: "Chưa đăng nhập" })
+            return res.status(401).json({ message: "Chưa đăng nhập" })
         }
         const token = authHeader.split(" ")[1];// Lấy đoạn accessToken sau Bearer.
 
@@ -16,7 +16,7 @@ export const verifyToken = async (req, res, next) => {
         // Tìm user trong DB theo user_id lấy từ token
         const user = await findById(decoded.user_id);
         if (!user) {
-            return resizeBy.status(401).json({ message: "Tải khoảng không tồn tại" });
+            return res.status(401).json({ message: "Tài khoảng không tồn tại" });
         }
 
         // Gắn user vào req để controller dùng
@@ -24,13 +24,13 @@ export const verifyToken = async (req, res, next) => {
         next();
     } catch (error) {
         if (error.name === "TokenExpiredError") {
-            return resizeBy.status(401).json({ message: "Token đã hết hạn" });
+            return res.status(401).json({ message: "Token đã hết hạn" });
         }
         if (error.name === "JsonWebTokenError") {
-            return resizeBy.status(401).json({ message: "Token không hợp lệ" })
+            return res.status(401).json({ message: "Token không hợp lệ" })
         }
         console.error("Lỗi trong verifyToken", error);
-        return resizeBy.status(500).json({ message: "Lỗi server" })
+        return res.status(500).json({ message: "Lỗi server" })
     }
 }
 
