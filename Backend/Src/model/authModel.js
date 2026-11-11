@@ -59,7 +59,7 @@ export const findEmailToken = async (Token, type) => {
 export const deleteEmailToken = async (Token) => {
     await pool.query(`
         DELETE FROM EmailToken 
-        WHERE token_hast = ?  
+        WHERE token_hash = ?  
         `, [hashToken(Token)]);
 }
 
@@ -87,7 +87,7 @@ export const updatePassword = async (user_id, hashedPassword) => {
 
 export const deleteRefreshTokenOfUser = async (user_id) => {
     await pool.query(`
-        DELETE FROM refreshToken 
+        DELETE FROM RefreshToken 
         WHERE user_id = ? 
         `, [user_id]);
 }

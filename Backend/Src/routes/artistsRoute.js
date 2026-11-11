@@ -4,7 +4,7 @@ import {
     getArtistAlbum,
     getArtistPage,
     getArtistSong
-} from "../controllers/artistsControllers.js";
+} from "../controllers/artistsController.js";
 
 const router = express.Router();
 

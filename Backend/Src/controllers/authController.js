@@ -1,10 +1,26 @@
-import { registerUser, saveRefreshToken, deleteRefreshToken, findRefreshToken, deleteEmailTokenOfUser, saveEmailToken, findEmailToken, setEmailVerified, updatePassword } from "../model/authModel.js";
-import { findAuthByAccount, findByEmail, findByAccount } from "../model/usersModel.js";
+import {
+    registerUser,
+    saveRefreshToken,
+    deleteRefreshToken,
+    findRefreshToken,
+    deleteEmailTokenOfUser,
+    saveEmailToken,
+    findEmailToken,
+    setEmailVerified,
+    updatePassword,
+    deleteRefreshTokenOfUser
+} from "../model/authModel.js";
+
+import {
+    findAuthByAccount,
+    findByEmail,
+    findByAccount
+} from "../model/usersModel.js";
+
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
-import crypto, { verify } from 'crypto';
 import { sendMail } from "../utils/mailer.js";
-import { json } from "stream/consumers";
+import crypto from 'crypto';
 
 const ACCESS_TOKEN_TTL = '30m';
 const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
@@ -25,7 +41,7 @@ function createAccessToken(user_id) {
 export const createEmailToken = async (user_id, type) => {
     await deleteEmailTokenOfUser(user_id, type);
     const token = crypto.randomBytes(64).toString("hex");
-    const expiresAt = new Date(Date.NOW() + EMAIL_TOKEN_TTL[type]);
+    const expiresAt = new Date(Date.now() + EMAIL_TOKEN_TTL[type]);
 
     await saveEmailToken(user_id, token, type, expiresAt);
     return token;
@@ -57,6 +73,9 @@ export const postRegister = async (req, res) => {
         return res.status(201).json({ message: "Đăng ký thành công" });
     }
     catch (error) {
+        if (error.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({ message: "Tên người dùng đã tồn tại" });
+        }
         console.error(error);
         return res.status(500).json({ message: "Lỗi server" });
     }
@@ -205,18 +224,18 @@ export const postResendVerification = async (req, res) => {
 
 export const postForgotPassword = async (req, res) => {
     try {
-        const user = req.user;
-        if (!user.user_email) {
+        const { user_email } = req.body;
+        if (!user_email?.trim()) {
             return res.status(400).json({ message: "Vui lòng nhập Email" });
         }
-        const record = await findByEmail(user.user_id);
+        const record = await findByEmail(user_email.trim());
         if (!record) {
             return res.status(200).json({ message: "Nếu email tồn tại, chúng tôi đã gửi mail xác minh" })
         }
-        const resetToken = await createEmailToken(user.user_id, "reset-password");
+        const resetToken = await createEmailToken(record.user_id, "reset_password");
         const link = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
         await sendMail(
-            user.user_email,
+            record.user_email,
             "Đặt lại mật khẩu 4TMusic",
             `<h2>Yêu cầu đặt lại mật khẩu</h2>
              <p>Bấm vào link bên dưới để đặt lại mật khẩu. Link có hiệu lực trong 15 phút.</p>
@@ -237,21 +256,21 @@ export const postResetPassword = async (req, res) => {
         if (!token || !new_password) {
             return res.status(400).json({ message: "Thiếu token hoặc mật khẩu mới" });
         }
-        if (new_password < 8) {
+        if (new_password.length < 8) {
             return res.status(400).json({ message: "mật khẩu mới phải có ít nhất 8 ký tự" });
         }
-        const record = await findEmailToken(token, "reset-password");
+        const record = await findEmailToken(token, "reset_password");
         if (!record) {
             return res.status(400).json({ message: "Link không tồn tại hoặc đã hết hạn" })
         }
         const hashedPassword = await bcrypt.hash(new_password, 10);
         await updatePassword(record.user_id, hashedPassword);
-        await deleteEmailTokenOfUser(record.user_id, "reset-password");
+        await deleteEmailTokenOfUser(record.user_id, "reset_password");
         await deleteRefreshTokenOfUser(record.user_id);
         return res.status(200).json({ message: "Mật khẩu đã được đổi" });
 
     } catch (error) {
-        console.error("Lỗi khi gọi postResetFPassword", error);
+        console.error("Lỗi khi gọi postResetPassword", error);
         return res.status(500).json({ message: "Lỗi server" });
 
     }

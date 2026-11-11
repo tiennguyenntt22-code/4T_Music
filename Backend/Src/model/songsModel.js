@@ -21,13 +21,6 @@ export const findSongBySongName = async (song_name) => {
   return row;
 };
 
-export const findSongByArtistId = async (artist_id) => {
-  const [row] = await pool.query(
-    `Select song_name , song_id , duration from song where artist_id = ?`,
-    [artist_id],
-  );
-  return row; // trả về nhiều bài
-};
 
 
 export const findSongByArtistName = async (artist_name) => {
@@ -58,18 +51,6 @@ export const findSongByAlbumName = async (album_name) => {
   return row;
 }
 
-export const findSongByPlaylist = async (playlist_id) => {
-  const [row] = await pool.query(
-    `SELECT s.song_id, s.song_name , s.duration
-        FROM playlist_song ps 
-        JOIN song s ON ps.song_id = s.song_id
-        WHERE ps.playlist_id = ?
-        ORDER BY ps.created_at
-        `, [playlist_id]
-  );
-  return row;
-}
-
 
 export const create = async ({ song_name, duration }) => {
   const [result] = await pool.query(
@@ -79,7 +60,7 @@ export const create = async ({ song_name, duration }) => {
   return result.insertId;
 };
 
-export const xoa = async (song_id) => {
+export const removeSongById = async (song_id) => {
   const [result] = await pool.query(`DELETE FROM song where song_id = ?`, [
     song_id,
   ]);
