@@ -1,5 +1,10 @@
+-- =====================================================================
+-- Schema khớp với DB thật (MySQL 8, database THE4TMUSIC) tại ngày 12/11/2026.
+-- Các thay đổi chưa chạy vào DB nằm ở file: migration_001_social.sql
+-- Sau khi chạy migration, cập nhật lại file này cho khớp.
+-- =====================================================================
 
-create database if not exists  THE4TMUSIC 
+create database if not exists  THE4TMUSIC
 character set utf8mb4
 collate utf8mb4_unicode_ci;
 
@@ -27,9 +32,9 @@ created_at timestamp default current_timestamp
 create table Artist (
 artist_id int auto_increment primary key, 
 artist_name varchar(150) not null unique,
-artist_birth date default '2001/01/01'
+artist_birth date default '2001/01/01',
+follower int default 0                        -- cột cũ, code không dùng; migration_001 sẽ xóa
 );
--- Số người theo dõi: đếm từ bảng ArtistFollow (COUNT(*)), không lưu cột riêng.
 -- 3-------------------------------------------------------------------
 -- --------------              Bảng Playlist        -------------------
 -- --------------------------------------------------------------------
@@ -57,10 +62,11 @@ foreign key (artist_id) references Artist(artist_id)
 create table Song (
 song_name varchar(100) not null default 'ECNHQ',
 song_id int auto_increment primary key, 
-release_date date not null default '2001/01/01',
+release_date date default null,
 duration int not null default 0,
+likes int default 0,                          -- cột cũ, code không dùng; migration_001 sẽ xóa
 shares int default 0,
--- Lượt like / bình luận: đếm từ bảng SongLike và Comment (COUNT(*)), không lưu cột riêng.
+comments int default 0,                       -- cột cũ, code không dùng; migration_001 sẽ xóa
 album_id int ,
 foreign key (album_id) references Album(album_id),
 artist_id int,
@@ -84,8 +90,8 @@ token_id int auto_increment primary key,
 user_id int not null,
 token_hash char(64) not null unique,          -- sha256 của refreshToken (64 ký tự hex)
 expires_at datetime not null,
-created_at timestamp default current_timestamp,
-foreign key (user_id) references User(user_id) on delete cascade
+created_at timestamp default current_timestamp
+-- Chưa có khóa ngoại tới User; migration_001 sẽ thêm (on delete cascade)
 );
 -- 8--------------------------------------------------------------------
 -- ---------------          Bảng EmailToken              --------------
@@ -93,53 +99,11 @@ foreign key (user_id) references User(user_id) on delete cascade
 create table EmailToken (
 token_id int auto_increment primary key,
 user_id int not null,
-token_hash char(64) not null unique,          -- sha256 của token gửi qua email
+token_hash varchar(64) not null unique,       -- sha256 của token gửi qua email
 type enum('verify_email','reset_password') not null,
 expires_at datetime not null,
 created_at timestamp default current_timestamp,
 foreign key (user_id) references User(user_id) on delete cascade
 );
--- 9--------------------------------------------------------------------
--- ---------------    bảng relation user-song (Like)     --------------
--- ---------------------------------------------------------------------
-create table SongLike (
-user_id int,
-song_id int,
-created_at timestamp default current_timestamp,
-primary key (user_id, song_id),               -- 1 người chỉ like 1 bài 1 lần
-foreign key (user_id) references User(user_id) on delete cascade,
-foreign key (song_id) references Song(song_id) on delete cascade
-);
--- 10-------------------------------------------------------------------
--- ---------------          Bảng Comment                 --------------
--- ---------------------------------------------------------------------
-create table Comment (
-comment_id int auto_increment primary key,
-user_id int not null,
-song_id int not null,
-content text not null,
-created_at timestamp default current_timestamp,
-foreign key (user_id) references User(user_id) on delete cascade,
-foreign key (song_id) references Song(song_id) on delete cascade
-);
--- 11-------------------------------------------------------------------
--- ---------------  bảng relation user-artist (Follow)   --------------
--- ---------------------------------------------------------------------
-create table ArtistFollow (
-user_id int,
-artist_id int,
-created_at timestamp default current_timestamp,
-primary key (user_id, artist_id),             -- 1 người chỉ follow 1 nghệ sĩ 1 lần
-foreign key (user_id) references User(user_id) on delete cascade,
-foreign key (artist_id) references Artist(artist_id) on delete cascade
-);
 
-
--- Index_user
-create index idx_user_name on User(user_name) ;
-
--- Index_song
-create index idx_song_name on song(song_name) ;
-
--- Index_album
-create index idx_album_name on album(album_name);
+-- Các bảng SongLike, Comment, ArtistFollow và index tìm kiếm: xem migration_001_social.sql
