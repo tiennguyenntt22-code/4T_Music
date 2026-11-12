@@ -219,7 +219,7 @@ export const postResendVerification = async (req, res) => {
         console.error("Lỗi khi gửi lại xác minh", error);
         return res.status(500).json({ message: "Lỗi server" });
     }
-    // API-8: Gửi lại xác minh email
+    // API-08 (Người A)
 }
 
 export const postForgotPassword = async (req, res) => {
@@ -247,7 +247,7 @@ export const postForgotPassword = async (req, res) => {
         console.error("Lỗi khi gọi postForgotPassword", error);
         return res.status(500).json({ message: "Lỗi server" });
     }
-    // API 9: Đổi mật khẩu bằng gửi email
+    // API-09 (Người A)
 }
 
 export const postResetPassword = async (req, res) => {
@@ -274,5 +274,5 @@ export const postResetPassword = async (req, res) => {
         return res.status(500).json({ message: "Lỗi server" });
 
     }
-    // API 10: Đổi mật khẩu bằng Token
+    // API-10 (Người A)
 }

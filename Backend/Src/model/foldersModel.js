@@ -7,7 +7,7 @@ export const findFolder = async (user_id) => {
     WHERE user_id = ?
     `, [user_id]);
     return row[0];
-}// API-11 -> hiển thị tất cả thông tin của user (dùng ở phía admin);
+}// API-11 (Người A)
 
 export const updateFolder = async (user_name, user_language, user_id) => {
     const [result] = await pool.query(`
@@ -17,7 +17,7 @@ export const updateFolder = async (user_name, user_language, user_id) => {
         WHERE user_id = ? 
         `, [user_name, user_language, user_id]);
     return result.affectedRows;
-}// API-12 -> cập nhật thông tên hiển thị, ngôn ngữ, 
+}// API-12 (Người A)
 
 
 export const findPasswordHash = async (user_id) => {
@@ -35,7 +35,7 @@ export const changePassword = async (hashedPassword, user_id) => {
         WHERE user_id = ? 
         `, [hashedPassword, user_id]);
     return result.affectedRows;
-}// API-13 -> Thay đổi mật khẩu
+}// API-13 (Người A)
 
 
 export const addFolderImage = async (avatar_url, user_id) => {
@@ -45,5 +45,5 @@ export const addFolderImage = async (avatar_url, user_id) => {
         WHERE user_id = ?
     `, [avatar_url, user_id]);
     return result.affectedRows;
-}// API-14 -> Thêm ảnh đại diện.
+}// API-14 (Người A)
 

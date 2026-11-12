@@ -10,7 +10,7 @@ export const findAlbumDetail = async (album_id) => {
     WHERE al.album_id = ? 
     `, [album_id]);
     return row; // return về album kể cả khi album chưa có bài nào
-}
+} // API-10 (Người B)
 
 export const findAlbumbyName = async (album_name) => {
     const [row] = await pool.query(`
@@ -35,7 +35,7 @@ export const addAlbum = async (album_name, artist_id) => {
     VALUES (? , ?)
         `, [album_name, artist_id]);
     return result.insertId;
-}
+} // API-20 (Người B)
 
 export const fixAlbum = async (album_name, artist_id, album_id) => {
     const [result] = await pool.query(`
@@ -45,7 +45,7 @@ export const fixAlbum = async (album_name, artist_id, album_id) => {
         WHERE album_id = ?
         `, [album_name, artist_id, album_id]);
     return result.affectedRows;
-}
+} // API-21 (Người B)
 
 export const removeAlbum = async (album_id) => {
 
@@ -60,5 +60,5 @@ export const removeAlbum = async (album_id) => {
         WHERE album_id = ?
         `, [album_id]);
     return result.affectedRows;
-}
+} // API-22 (Người B)
 

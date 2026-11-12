@@ -15,7 +15,7 @@ export const findAllPlaylistByUser = async (user_id) => {
             WHERE user_id = ?
             `, [user_id]);
     return row;
-} // User dùng để xem các playlist của họ. API-28
+} // API-15 (Người A)
 
 export const createPlaylist = async (playlist_name, playlist_description, user_id) => {
     const [result] = await pool.query(`
@@ -23,7 +23,7 @@ export const createPlaylist = async (playlist_name, playlist_description, user_i
         VALUES (? , ?, ?) 
         `, [playlist_name, playlist_description, user_id])
     return result.insertId; // insertID -> id tự điền, tự tăng.
-} // API-29. 
+} // API-16 (Người A)
 
 export const playlistDetail = async (playlist_id) => {
     const [row] = await pool.query(`
@@ -32,7 +32,7 @@ export const playlistDetail = async (playlist_id) => {
             WHERE playlist_id = ?
             `, [playlist_id]);
     return row[0];
-} // API-30
+} // API-17 (Người A)
 // Hàm này lấy các thông tin của playlist (các bài hát thuộc playlist được sử lí ở hàm file findSongByPlaylist)
 // controller sẽ sử lí cả 2 hàm playlistDetail và findSongByPlaylist.
 
@@ -43,21 +43,21 @@ export const changePlaylist = async (playlist_name, playlist_description, playli
         WHERE playlist_id = ?
         `, [playlist_name, playlist_description, playlist_id]);
     return result.affectedRows;
-}// API-31. User chỉnh sửa tên, mô tả playlist
+}// API-18 (Người A)
 
 export const deletePlaylist = async (playlist_id) => {
     const [result] = await pool.query(`
             DELETE FROM playlist WHERE playlist_id = ?        
             `, [playlist_id]);
     return result.affectedRows;
-} // API-32. User xóa playlist.
+} // API-19 (Người A)
 
 export const addSongToPlaylist = async (playlist_id, song_id) => {
     const [result] = await pool.query(`
             INSERT INTO playlist_song (playlist_id, song_id) VALUE (?, ?) 
             `, [playlist_id, song_id]);
     return result.affectedRows;
-}// API-33. User Thêm bài hát vào playlist
+}// API-20 (Người A)
 
 export const deleteSongFromPlaylist = async (playlist_id, song_id) => {
     const [result] = await pool.query(`
@@ -65,7 +65,7 @@ export const deleteSongFromPlaylist = async (playlist_id, song_id) => {
         WHERE playlist_id = ? AND song_id = ?
             `, [playlist_id, song_id]);
     return result.affectedRows;
-}// API-34. User xóa bài hát ra khỏi playlist
+}// API-21 (Người A)
 
 export const arrangeSongByName = async (playlist_id) => {
     const [row] = await pool.query(`
@@ -76,7 +76,7 @@ export const arrangeSongByName = async (playlist_id) => {
         ORDER BY s.song_name
         `, [playlist_id]);
     return row;
-}// API-35. User hiển thị nhạc trong playlist theo tên.
+}// API-22 (Người A)
 
 export const findSongByPlaylist = async (playlist_id) => {
     const [rows] = await pool.query(`
@@ -87,4 +87,4 @@ export const findSongByPlaylist = async (playlist_id) => {
         ORDER BY ps.created_at
         `, [playlist_id]);
     return rows;
-} // API-30: dùng trong getPlaylistDetail
+} // API-17 (Người A)
