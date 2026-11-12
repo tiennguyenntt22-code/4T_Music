@@ -7,6 +7,7 @@ import playlistsRoute from "./routes/playlistsRoute.js";
 import folderRoute from "./routes/foldersRoute.js";
 import authRoute from "./routes/authRoute.js";
 import socialRoute from "./routes/socialRoute.js";
+import albumsRoute from "./routes/albumsRoute.js";
 import cookieParser from 'cookie-parser';
 const app = express();
 app.use(express.json());
@@ -24,6 +25,8 @@ app.use("/api/playlists", playlistsRoute);
 app.use("/api/auth", authRoute);
 
 app.use("/api/social", socialRoute);
+
+app.use("/api/albums", albumsRoute);
 
 app.listen(5001, () => {
   console.log("server bắt đầu trên cổng 5001");

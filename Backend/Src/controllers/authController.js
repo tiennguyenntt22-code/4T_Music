@@ -52,7 +52,7 @@ export const postRegister = async (req, res) => {
 
     try {
         const { user_name, user_account, user_password, user_email, user_date_of_birth } = req.body;
-        if (!user_name || !user_account || !user_email || !user_password) {
+        if (!user_name || !user_account || !user_email || !user_password || !user_date_of_birth) {
             return res.status(400).json({ message: "Vui lòng nhập đủ dữ liệu!" })
         }
         const existAccount = await findByAccount(user_account);
