@@ -1,6 +1,7 @@
 import { findAlbumDetail, addAlbum, fixAlbum, removeAlbum, addSongToAlbum, findAlbumbyName } from "../model/albumsModel.js";
 import { findArtistPage } from "../model/artistsModel.js";
 import { findSongById } from "../model/songsModel.js";
+import { findById } from "../model/usersModel.js";
 
 export const getAlbumDetail = async (req, res) => {
     const { album_id } = req.params;
@@ -34,6 +35,23 @@ export const postAlbum = async (req, res) => {
         return res.status(500).json({ message: "Lỗi server" });
     }
     // Thêm album mới
+}
+
+export const postAlbumByArtist = async (req, res) => {
+    const { album_name, artist_id } = req.body;
+    const { user } = req.user;
+    try {
+        const result = await findById(user.user_id);
+        if (result.role != 'artist') {
+            return res.status(400).json({ message: "Bạn không có quyền thêm bài hát" })
+        }
+        await addAlbum(album_name, artist_id);
+        return res.status(201).json({ message: "Nghệ sĩ thêm bài hát thành công" })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Lỗi server" });
+    }
+
 }
 
 export const postSongToAlbum = async (req, res) => {
