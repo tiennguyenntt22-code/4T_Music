@@ -4,10 +4,10 @@ import { isAdmin, verifyToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/:album_id ", getAlbumDetail);
+router.get("/:album_id", getAlbumDetail);
 router.post("/", verifyToken, isAdmin, postAlbum);
 router.post("/song/:album_id", verifyToken, isAdmin, postSongToAlbum);
-router.post("/artist/song/:album_id", verifyToken, postAlbumByArtist);
+router.post("/artist", verifyToken, postAlbumByArtist);
 router.patch("/:album_id", verifyToken, isAdmin, updateAlbum);
 router.delete("/:album_id", verifyToken, isAdmin, deleteAlbum);
 

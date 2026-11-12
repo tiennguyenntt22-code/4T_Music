@@ -39,10 +39,9 @@ export const postAlbum = async (req, res) => {
 
 export const postAlbumByArtist = async (req, res) => {
     const { album_name, artist_id } = req.body;
-    const { user } = req.user;
     try {
-        const result = await findById(user.user_id);
-        if (result.role != 'artist') {
+        
+        if (req.user.role !== "artist") {
             return res.status(400).json({ message: "Bạn không có quyền thêm bài hát" })
         }
         await addAlbum(album_name, artist_id);
