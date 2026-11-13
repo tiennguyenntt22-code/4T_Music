@@ -1,7 +1,6 @@
 import { findAlbumDetail, addAlbum, fixAlbum, removeAlbum, addSongToAlbum, findAlbumbyName } from "../model/albumsModel.js";
 import { findArtistPage } from "../model/artistsModel.js";
 import { findSongById } from "../model/songsModel.js";
-import { findById } from "../model/usersModel.js";
 
 export const getAlbumDetail = async (req, res) => {
     const { album_id } = req.params;

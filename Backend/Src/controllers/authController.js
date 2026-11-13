@@ -93,6 +93,9 @@ export const postLogin = async (req, res) => {
         if (!exist) {
             return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu!" });
         }
+        if (exist.status === 'banned') {
+            return res.status(403).json({ message: "Tài khoảng của bạn đã bị tạm khóa" })
+        }
 
         const passwordCorrect = await bcrypt.compare(user_password, exist.user_password);
         if (!passwordCorrect) {

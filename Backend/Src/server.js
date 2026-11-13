@@ -8,6 +8,8 @@ import folderRoute from "./routes/foldersRoute.js";
 import authRoute from "./routes/authRoute.js";
 import socialRoute from "./routes/socialRoute.js";
 import albumsRoute from "./routes/albumsRoute.js";
+import adminsRoute from "./routes/adminsRoute.js";
+import searchRoute from "./routes/searchRoute.js";
 import cookieParser from 'cookie-parser';
 const app = express();
 app.use(express.json());
@@ -27,6 +29,10 @@ app.use("/api/auth", authRoute);
 app.use("/api/social", socialRoute);
 
 app.use("/api/albums", albumsRoute);
+
+app.use("/api/admin", adminsRoute);
+
+app.use("/api/search", searchRoute);
 
 app.listen(5001, () => {
   console.log("server bắt đầu trên cổng 5001");

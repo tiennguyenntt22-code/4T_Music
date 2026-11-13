@@ -36,4 +36,41 @@ export const findArtistAlbum = async (artist_id) => {
 
 /// Admin quản lý nghệ sĩ
 
+export const addArtist = async (artist_name, artist_birth) => {
+  const [result] = await pool.query(`
+    INSERT INTO Artist (artist_name, artist_birth)
+    VALUES (? , ?)
+    `, [artist_name, artist_birth]);
+  return result.insertId;
+} // API 17
+
+export const changeArtist = async (artist_name, artist_birth, artist_id) => {
+  const [result] = await pool.query(`
+     UPDATE Artist
+     SET artist_name = ? , artist_birth = ?
+     WHERE artist_id = ?
+    `, [artist_name, artist_birth, artist_id]);
+  return result.affectedRows;
+} // API 19
+
+export const removeArtist = async (artist_id) => {
+
+  await pool.query(`
+  UPDATE Song 
+  SET artist_id = NULL
+  WHERE artist_id = ?
+    `, [artist_id]);
+
+  await pool.query(`
+  UPDATE Album 
+  SET artist_id = NULL
+  WHERE artist_id = ?
+    `, [artist_id]);
+
+  const [result] = await pool.query(`
+    DELETE FROM Artist 
+    WHERE artist_id = ?
+    `, [artist_id]);
+  return result.affectedRows;
+} // API 19 
 

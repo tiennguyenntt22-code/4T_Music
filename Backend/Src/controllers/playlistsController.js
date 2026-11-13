@@ -43,7 +43,7 @@ export const postPlaylist = async (req, res) => {
         if (!user_id) {
             return res.status(400).json({ message: "Thiếu user_id" });
         }
-        const playlists = await createPlaylist(playlist_name.trim(), playlist_description || null,user_id);
+        const playlists = await createPlaylist(playlist_name.trim(), playlist_description || null, user_id);
         return res.status(200).json({ message: "Tạo thành công playlist", playlists })
     }
     catch (error) {
@@ -152,3 +152,4 @@ export const sortSongName = async (req, res) => {
         return res.status(500).json({ message: "Lỗi server" })
     }
 }
+

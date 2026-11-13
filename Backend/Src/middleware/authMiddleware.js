@@ -19,6 +19,10 @@ export const verifyToken = async (req, res, next) => {
             return res.status(401).json({ message: "Tài khoảng không tồn tại" });
         }
 
+        if (user.status === 'banned') {
+            return res.status(403).json({ message: "Tài khoảng của bạn đã bị tạm khóa" })
+        }
+
         // Gắn user vào req để controller dùng
         req.user = user;
         next();

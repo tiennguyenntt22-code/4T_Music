@@ -33,7 +33,12 @@ create table Artist (
 artist_id int auto_increment primary key, 
 artist_name varchar(150) not null unique,
 artist_birth date default '2001/01/01',
-follower int default 0                        -- cột cũ, code không dùng; migration_001 sẽ xóa
+follower int default 0,                       -- cột cũ, code không dùng; migration_001 sẽ xóa
+user_id int null unique,                      -- tài khoản của nghệ sĩ (null = admin thêm, chưa có tài khoản)
+avatar_url text default null,
+bio text default null,
+created_at timestamp default current_timestamp,
+foreign key (user_id) references User(user_id) on delete set null
 );
 -- 3-------------------------------------------------------------------
 -- --------------              Bảng Playlist        -------------------

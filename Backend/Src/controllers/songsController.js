@@ -6,6 +6,7 @@ import {
   findSongBySongName,
   findSongByArtistName,
   findSongByAlbumName,
+  changeSong,
 
 } from "../model/songsModel.js";
 
@@ -89,6 +90,25 @@ export const postSong = async (req, res) => {
     return res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+export const updateSong = async (req, res) => {
+  const { song_id } = req.params;
+  const { song_name, duration } = req.body;
+  try {
+    const exist = await findSongById(song_id);
+    if (!exist) {
+      return res.status(404).json({ message: "Bài hát không tồn tại" });
+    }
+    const result = await changeSong(song_name, duration, song_id);
+    if (!result) {
+      return res.status(400).json({ message: "Lỗi không thể thay đổi bài hát" });
+    }
+    return res.status(200).json({ message: "Thay đổi bài hát thành công" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Lỗi server" });
+  }
+} 
 
 export const deleteSongById = async (req, res) => {
   try {

@@ -7,7 +7,15 @@ export const findAll = async () => {
 
 export const findSongById = async (song_id) => {
   const [row] = await pool.query(
-    `Select song_name , song_id , duration from song where song_id = ?`,
+    `Select
+     s.song_name , s.song_id , s.duration,
+     a.artist_id, a.artist_name   
+     al.album_id, al.album_name
+     FROM Song s
+     LEFT JOIN Artist a ON a.artist_id = s.artist_id
+     LEFT JOIN Album al ON al.album_id = s.album_id
+     WHERE song_id = ?
+     `,
     [song_id],
   );
   return row[0];
@@ -59,6 +67,15 @@ export const create = async ({ song_name, duration }) => {
   );
   return result.insertId;
 };
+
+export const changeSong = async (song_name, duration, song_id) => {
+  const [result] = await pool.query(`
+    UPDATE Song 
+    SET song_name = ? , duration = ?
+    WHERE song_id = ?
+    `, [song_name, duration, song_id]);
+  return result.affectedRows;
+}
 
 export const removeSongById = async (song_id) => {
   const [result] = await pool.query(`DELETE FROM song where song_id = ?`, [
