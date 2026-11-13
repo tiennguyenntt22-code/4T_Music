@@ -17,11 +17,11 @@ router.get("/", verifyToken, isAdmin, getAllPlaylist)
 router.get("/playlist", verifyToken, getAllPlaylistByUser)
 router.post("/name/playlist", verifyToken, postPlaylist)
 router.get("/detail/:playlist_id", verifyToken, getPlaylistDetail)
-router.put("/:playlist_id", verifyToken, putPlaylist)
-router.delete("/:playlist_id", verifyToken, removePlaylist)
+router.put("/:playlist_id", verifyToken, putPlaylist) // 
+router.delete("/:playlist_id", verifyToken, removePlaylist) // 
 router.delete("/:song_id/:playlist_id", verifyToken, removeSongFromPlaylist)
-router.post("/songs/:playlist_id", verifyToken, postSongToPlaylist)
-router.patch("/:playlist_id/order", verifyToken, sortSongName)
+router.post("/songs/:playlist_id", verifyToken, postSongToPlaylist) // 
+router.patch("/:playlist_id/order", verifyToken, sortSongName) // 
 
 
 export default router

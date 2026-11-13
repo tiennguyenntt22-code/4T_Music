@@ -25,7 +25,7 @@ export const getUserListByStatus = async (req, res) => {
 
 export const banUser = async (req, res) => {
     const { user_id } = req.params;
-    const { role, status } = req.body;
+    const { status } = req.body;
     try {
         const exist = await findById(user_id);
         if (!exist) {

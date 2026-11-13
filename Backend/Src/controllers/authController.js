@@ -93,15 +93,13 @@ export const postLogin = async (req, res) => {
         if (!exist) {
             return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu!" });
         }
-        if (exist.status === 'banned') {
-            return res.status(403).json({ message: "Tài khoảng của bạn đã bị tạm khóa" })
-        }
-
         const passwordCorrect = await bcrypt.compare(user_password, exist.user_password);
         if (!passwordCorrect) {
             return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu!" });
         } // dùng bcrypt so sánh mật khẩu đưa vào với mật khẩu đã được mã hóa
-
+        if (exist.status === 'banned') {
+            return res.status(403).json({ message: "Tài khoảng của bạn đã bị tạm khóa" })
+        }
         const accessToken = createAccessToken(exist.user_id); // Nếu người dùng Login thành công, dùng user_id của họ để cấp Access
         const refreshToken = crypto.randomBytes(64).toString("hex");// tạo refreshToken
         const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL);

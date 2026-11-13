@@ -9,7 +9,7 @@ export const findSongById = async (song_id) => {
   const [row] = await pool.query(
     `Select
      s.song_name , s.song_id , s.duration,
-     a.artist_id, a.artist_name   
+     a.artist_id, a.artist_name,   
      al.album_id, al.album_name
      FROM Song s
      LEFT JOIN Artist a ON a.artist_id = s.artist_id
